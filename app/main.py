@@ -13,7 +13,7 @@ def main():
         # read request
         request = client_socket.recv(1024)
         print("request recieved")
-        print(request.decode("utf-8"))
+        print(request)
 
         # get path
         request_line = request.splitlines()[0]
