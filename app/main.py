@@ -19,13 +19,6 @@ def main():
         # get path
         request_line = request_str.splitlines()[0]
         print(f"Request line: {request_line}")
-        parts = request_line.split()
-        if len(parts) >= 2:
-            path = parts[1]
-        else:
-            path = "/invalid"
-
-        print(f"Extracted path: {path}")
 
         path = request_line.split()[1]
         print(path)
