@@ -22,6 +22,8 @@ def main():
     else:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
 
+    client_socket.sendall(response.encode("utf-8")
+
     client_socket.close()
     server_socket.close()
 
