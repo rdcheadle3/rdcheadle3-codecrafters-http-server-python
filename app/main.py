@@ -13,5 +13,9 @@ def main():
     client_socket, client_address = server_socket.accept()
     print(f"Accepted connection from {client_address}")
 
+    request = client_socket.recv(1024)
+    print("request recieved...")
+    print(request.decode("utf-8"))
+
 if __name__ == "__main__":
     main()
