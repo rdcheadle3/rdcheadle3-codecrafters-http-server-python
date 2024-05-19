@@ -12,11 +12,12 @@ def main():
     
         # read request
         request = client_socket.recv(1024)
+        request_str = request.decode("utf-8")
         print("request recieved")
-        print(request)
+        print(request_str)
 
         # get path
-        request_line = request.splitlines()[0]
+        request_line = request_str.splitlines()[0]
         print(f"Request line: {request_line}")
         parts = request_line.split()
         if len(parts) >= 2:
