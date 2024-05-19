@@ -17,7 +17,15 @@ def main():
 
         # get path
         request_line = request.splitlines()[0]
-        print(request_line)
+        print(f"Request line: {request_line}")
+        parts = request_line.split()
+        if len(parts) >= 2:
+            path = parts[1]
+        else:
+            path = "/invalid"
+
+        print(f"Extracted path: {path}")
+
         path = request_line.split()[1]
         print(path)
     
@@ -25,6 +33,8 @@ def main():
             response = "HTTP/1.1 200 OK\r\n\r\n"
         else:
             response = "HTTP/1.1 404 Not Found\r\n\r\n"
+
+        print(f"Response: {response}")
 
         client_socket.sendall(response.encode("utf-8"))
 
