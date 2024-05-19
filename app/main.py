@@ -17,7 +17,9 @@ def main():
 
         # get path
         request_line = request.splitlines()[0]
+        print(request_line)
         path = request_line.split()[1]
+        print(path)
     
         if path == "/":
             response = "HTTP/1.1 200 OK\r\n\r\n"
