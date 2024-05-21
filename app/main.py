@@ -1,7 +1,11 @@
+from os import read
 import socket
+import sys
 
 
 def main():
+    
+
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
     
     def accept_connection(server_socket):
@@ -27,10 +31,37 @@ def main():
         path = request_line[1]
         return path
 
-    def generate_response(path, headers):
+    def get_filename(path):
+        filename = ""
+        parts = path.split("/")
+        if len(parts) > 2:
+            filename = parts[2]
+        return filename
+    
+    def get_abs_path():
+        if len(sys.argv) >= 3:
+            abs_path = sys.argv[2]
+        else: abs_path = ""
+        return abs_path
+
+    def read_file(abs_path, filename):
+        file_path = abs_path + filename
+        try:
+            with open(file_path, 'r') as file:
+                file_contents = file.read()
+        except FileNotFoundError:
+            file_contents = ""
+        return file_contents
+    
+    def generate_response(path, headers, filename, file_contents):
         user_agent = headers.get('User-Agent', "Unknown")
 
-        if path == "/user-agent":
+        if path == f"/files/{filename}":
+            if len(file_contents) > 0:
+                response = f"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {len(file_contents)}\r\n\r\n{file_contents}"
+            else: response = "HTTP/1.1 404 Not Found\r\n\r\n"
+
+        elif path == "/user-agent":
            response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent)}\r\n\r\n{user_agent}"
         
         elif "/echo/" in path:
@@ -57,9 +88,21 @@ def main():
 
        headers, lines = get_headers(request_str)
 
-       path = get_path(lines) 
+       path = get_path(lines)
+       
+       filename = get_filename(path)
+       print(f"Filename: {filename}")
 
-       response = generate_response(path, headers)
+       abs_path = get_abs_path()
+       print(f"Absolut Path: {abs_path}")
+
+       file_path = read_file(abs_path, filename)
+       print(f"Full File Path: {file_path}")
+
+       file_contents = read_file(abs_path, filename)
+       print(f"File Contents: {file_contents}")
+
+       response = generate_response(path, headers, filename, file_contents)
 
        print(f"Response: {response}")
 
