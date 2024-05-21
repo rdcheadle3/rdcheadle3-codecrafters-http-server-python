@@ -23,7 +23,7 @@ def main():
         path = request_line.split()[1]
         print(f"Extracted path: {path}")
 
-        str = path.split("/")[2]
+        str = path.rsplit("/", 1)[-1]
         print(f"Path strings: {str}")
 
         if path == f"/echo/{str}":
