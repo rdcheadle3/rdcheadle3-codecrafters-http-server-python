@@ -21,9 +21,14 @@ def main():
         print(f"Request line: {request_line}")
 
         path = request_line.split()[1]
-        print(path)
-    
-        if path == "/":
+        print(f"Extracted path: {path}")
+
+        str = path.split("/")[2]
+        print(f"Path strings: {str}")
+
+        if path == f"/echo/{str}":
+            response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(str)}\r\n\r\n{str}"
+        elif path == "/":
             response = "HTTP/1.1 200 OK\r\n\r\n"
         else:
             response = "HTTP/1.1 404 Not Found\r\n\r\n"
