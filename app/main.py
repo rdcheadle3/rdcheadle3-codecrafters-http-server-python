@@ -16,18 +16,30 @@ def main():
         print("request recieved")
         print(request_str)
 
+        # get headers
+        headers = {}
+        lines = request_str.split("\r\n")
+        for line in lines[1:]:
+            if ': ' in line:
+                key, value = line.split(': ', 1)
+                headers[key] = value
+
+        #get user agent header
+        user_agent = headers.get('User-Agent', "Uknown")
+        print(f"User-Agent: {user_agent}")
+
         # get path
-        request_line = request_str.splitlines()[0]
-        print(f"Request line: {request_line}")
+        request_line = lines[0].split(" ")
+        path = request_line[1]
+        print(f"Path: {path}")
 
-        path = request_line.split()[1]
-        print(f"Extracted path: {path}")
-
-        str = path.rsplit("/", 1)[-1]
-        print(f"Path strings: {str}")
-
-        if path == f"/echo/{str}":
-            response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(str)}\r\n\r\n{str}"
+        if path == "/user-agent":
+            response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(user_agent)}\r\n\r\n{user_agent}"
+        elif "/echo/" in path:
+            parts = path.split("/echo/", 1)
+            print(f"Parts: {parts}")
+            echo_str = parts[1] if len(parts) > 1 else "No data"
+            response = f"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(echo_str)}\r\n\r\n{echo_str}"
         elif path == "/":
             response = "HTTP/1.1 200 OK\r\n\r\n"
         else:
